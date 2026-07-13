@@ -21,6 +21,18 @@ Open `http://localhost:8000` in a normal desktop browser.
 - Added an **L-shaped wardrobe** with one resize handle on each free end
 - Every resize is stored as one undoable action
 
+## Camera visibility and cutaway
+
+- Added **Auto-hide blocking walls** under Camera visibility
+- Automatic cutaway only operates at eye-level or other low camera heights; top and bird's-eye views remain intact
+- Cutaway style can be **Fade** or **Hide**
+- Fade opacity and cutaway depth are adjustable
+- A selected wall can be manually hidden for a camera view
+- **Show all walls** restores every manually hidden wall
+- Cutaway affects only viewport and PNG rendering; walls remain in project data, wall editing, collisions and validation
+- Opening objects and labels attached to a hidden wall follow that wall's camera visibility
+- Camera visibility settings are saved in project JSON and ZIP packages
+
 ## Current catalogue update
 
 - Added TV console under Carpentry
@@ -73,7 +85,7 @@ Use these files from `gpt/`:
 
 Also upload `schema/project-schema.md` as Knowledge. The GPT should always provide a validated `project.json` separately and may also provide a real standard ZIP containing that file, notes, basemap and references. It must not merely rename a text file to `.zip`.
 
-The latest object catalogue includes the L-shaped wardrobe model and carpentry resize rules. Replace the older Knowledge file in the GPT editor after pulling this update.
+The latest object catalogue includes the L-shaped wardrobe model, carpentry resize rules and furniture-placement metadata used by **Align furniture β**. Replace the older Knowledge file in the GPT editor after pulling this update.
 
 ## Browser dependencies
 
