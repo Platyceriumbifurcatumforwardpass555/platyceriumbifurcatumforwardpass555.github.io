@@ -1,43 +1,52 @@
-# BTO Layout Studio
+# BTO Layout Studio v2.7
 
-A lightweight browser-based 2D/Three.js planning tool for a Singapore 5-room BTO.
+A lightweight browser-based 2D/Three.js planning tool for Singapore BTO layouts. The authoritative model is structured project data in millimetres.
 
-## Run locally
+## Run
 
-Serve the repository with any static web server, for example:
+Host the repository as a static site, or run locally with:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000` in a normal desktop browser. Do not use an embedded HTML preview for sustained WebGL work.
+Open `http://localhost:8000` in a normal desktop browser.
 
-## Current features
+## Project packages
 
-- Millimetre-based structured project data
-- PNG/JPG/WebP basemap upload, calibration, ratio lock, crop and offsets
-- Browser-side Tesseract.js dimension suggestions (online connection required to load OCR assets)
-- Editable beta wall detection and wall-to-basemap alignment
-- Direct wall manipulation: drag body to move, endpoints to resize, green handle to rotate
-- Doors and windows with labels
-- Furniture, Carpentry and Decorative catalogues
-- Wardrobes, kitchen upper/lower cabinets, worktops and settees
-- Glass-block screens and adjustable S/M potted plants
-- Larger label text with red occlusion state and no text outline
-- Optional adjustable ceiling, defaulting to 2,600 mm
-- Collision and clearance warnings
-- Camera controls and PNG export
-- Project JSON save/load
-- Undo/redo and right-click deselection
+The app can import and export `.btozip` project packages containing:
 
-## OCR
+- `manifest.json`
+- `project.json`
+- `project-notes.json`
+- the calibrated basemap under `assets/`
+- reference images under `references/`
 
-OCR runs in the browser through Tesseract.js. The plan image is processed on the user's device. OCR values are suggestions only and must be confirmed before basemap scaling or wall alignment.
+The package is a normal ZIP archive with a different extension. JSON project data remains the authoritative source; images are references.
 
-## Hosting
+## Hosted project library
 
-The app is static and can be hosted with GitHub Pages. In repository **Settings → Pages**, publish from the `main` branch and root folder.
+Add package entries to `projects/index.json`. Each entry uses:
 
-## Notes
+```json
+{
+  "id": "example-project",
+  "name": "Example project",
+  "description": "Optional description",
+  "package": "example-project/example-project.btozip"
+}
+```
 
-The authoritative model is the JSON project data in millimetres. SVG or raster plans are visual references and are not used as authoritative furniture coordinates.
+The package path is resolved relative to `projects/index.json`.
+
+## Custom GPT handoff
+
+Use the files in `gpt/` as the custom GPT's instructions and knowledge. The GPT should output a schema-valid `project.json` after architectural and layout review. Load that JSON directly, or place it with the basemap and references into a `.btozip` package.
+
+## Browser dependencies
+
+- Three.js for 3D
+- Tesseract.js for optional in-browser OCR
+- JSZip for project-package import/export
+
+No OCR service API is required.
