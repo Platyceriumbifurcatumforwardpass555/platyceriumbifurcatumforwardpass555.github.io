@@ -12,6 +12,13 @@ python3 -m http.server 8000
 
 Open `http://localhost:8000` in a normal desktop browser.
 
+## Current catalogue update
+
+- Added TV console under Carpentry
+- Added custom decorative models for TV, framed picture, bowl of fruits, handphone and water flask
+- Added adjustable object elevation in millimetres for tabletop, console-top and wall-mounted objects
+- Furniture-to-furniture collision checks now account for vertical separation, so an object can sit on a support surface without being treated as a volume overlap
+
 ## Project packages
 
 The app can import and export `.btozip` project packages containing:
@@ -41,7 +48,12 @@ The package path is resolved relative to `projects/index.json`.
 
 ## Custom GPT handoff
 
-Use the files in `gpt/` as the custom GPT's instructions and knowledge. The GPT should output a schema-valid `project.json` after architectural and layout review. Load that JSON directly, or place it with the basemap and references into a `.btozip` package.
+Use these files from `gpt/`:
+
+- `BTO-Layout-Planner-Instructions.md` — paste into the GPT Instructions field
+- `BTO-Layout-Object-Catalog.md` — upload as a Knowledge file
+
+Also upload `schema/project-schema.md` as Knowledge. The GPT should output schema-valid `project.json` after architectural and layout review. Load that JSON directly, or place it with the basemap and references into a `.btozip` package.
 
 ## Browser dependencies
 
