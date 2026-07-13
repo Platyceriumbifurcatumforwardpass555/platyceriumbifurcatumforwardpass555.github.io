@@ -8,19 +8,20 @@
 
 ## Instructions
 
-Paste the complete contents of `BTO-Layout-Planner-Instructions.md` into the GPT **Instructions** field. Replace the old instructions completely rather than appending the file beneath them.
+Paste the complete contents of `BTO-Layout-Planner-Instructions.md` into the GPT **Instructions** field. This concise version is below the 8,000-character limit. Replace the old instructions completely rather than appending them.
 
 ## Knowledge files
 
-Upload:
+Remove older copies first, then upload:
 
-1. `../schema/project-schema.md`
-2. `../schema/project-template.json`
+1. `BTO-Layout-Planning-Workflow.md`
+2. `BTO-Layout-Rendering-Workflow.md`
 3. `BTO-Layout-Object-Catalog.md`
-4. `BTO-Layout-Rendering-Workflow.md`
-5. Any company-specific HDB planning standards, design-language guide or furniture-clearance guide
+4. `../schema/project-schema.md`
+5. `../schema/project-template.json`
+6. Any company-specific HDB planning standards, design-language guide or furniture-clearance guide
 
-Remove older copies before uploading replacements so the GPT does not retrieve conflicting versions.
+The Instructions contain only the operating rules and mode selection. Detailed planning, rendering, catalogue and schema information lives in Knowledge so the Instructions remain within the character limit.
 
 ## Capabilities
 
