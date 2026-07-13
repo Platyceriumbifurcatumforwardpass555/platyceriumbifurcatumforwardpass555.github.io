@@ -13,7 +13,7 @@ The project file is UTF-8 JSON. Coordinates and dimensions are millimetres. The 
 - `shell`: fixed rectangular architecture or existing built-ins
 - `clearances`: rectangular circulation zones
 - `furniture`: furniture, carpentry and decorative objects
-- `settings`: ceiling visibility and height
+- `settings`: ceiling and camera-cutaway settings
 - `camera`: Three.js camera position, target and FOV
 
 ## Wall
@@ -92,25 +92,54 @@ The `placement` object lets Layout Studio preserve design intent when **Align fu
 ```
 
 Fields:
-
-- `roomId`: intended room-zone ID.
-- `mode`: `wall`, `free`, or `support`.
-- `wallId`: valid wall ID for wall-anchored objects.
-- `gap`: desired clear distance in millimetres from the wall face.
-- `supportId`: object ID beneath an elevated decorative object.
-- `groupId`: shared ID for objects whose relative arrangement should be preserved.
+- `roomId`: intended room-zone ID
+- `mode`: `wall`, `free`, or `support`
+- `wallId`: valid wall ID for wall-anchored objects
+- `gap`: desired clear distance in millimetres from the wall face
+- `supportId`: object ID beneath an elevated decorative object
+- `groupId`: shared ID for objects whose relative arrangement should be preserved
 
 Recommended use:
-
-- Wardrobes, kitchen cabinets, worktops and TV consoles: `mode: "wall"` with `wallId`.
-- Beds: `mode: "wall"` when the intended headboard wall is known.
-- Dining table and chairs: shared `groupId`, usually `dining-set`.
-- Freestanding sofa, lounge chair and coffee table: usually `mode: "free"`.
-- TV, fruit bowl, handphone and flask on another object: `mode: "support"` with `supportId`.
+- Wardrobes, kitchen cabinets, worktops and TV consoles: `mode: "wall"` with `wallId`
+- Beds: `mode: "wall"` when the intended headboard wall is known
+- Dining table and chairs: shared `groupId`, usually `dining-set`
+- Freestanding sofa, lounge chair and coffee table: usually `mode: "free"`
+- TV, fruit bowl, handphone and flask on another object: `mode: "support"` with `supportId`
 
 Placement metadata is advisory. Collision, circulation and door-clearance checks take priority.
 
-Example tabletop object:
+## L-shaped wardrobe
+
+```json
+{
+  "id": "wardrobe-master-l",
+  "name": "L-shaped wardrobe",
+  "category": "carpentry",
+  "model": "l-wardrobe",
+  "x": 950,
+  "y": 1200,
+  "w": 2400,
+  "d": 1800,
+  "h": 2700,
+  "armDepth": 600,
+  "elevation": 0,
+  "rotation": 0,
+  "placement": {
+    "roomId": "room-master",
+    "mode": "wall",
+    "wallId": "wall-master-west",
+    "gap": 0
+  }
+}
+```
+
+- `w`: outer length of the first arm
+- `d`: outer length of the perpendicular arm
+- `armDepth`: shared carcass depth
+- Keep `armDepth` smaller than both `w` and `d`
+- Layout Studio can resize either free end independently
+
+## Example tabletop object
 
 ```json
 {
@@ -135,10 +164,35 @@ Example tabletop object:
 }
 ```
 
+## Camera cutaway settings
+
+Camera cutaway changes only viewport and PNG rendering. It does not delete walls or remove them from validation.
+
+```json
+{
+  "settings": {
+    "ceilingVisible": false,
+    "ceilingHeight": 2600,
+    "cameraCutaway": {
+      "enabled": false,
+      "style": "fade",
+      "opacity": 0.15,
+      "depth": 1200,
+      "hiddenWallIds": []
+    }
+  }
+}
+```
+
+- `enabled`: automatically fade or hide blocking walls at low camera heights
+- `style`: `fade` or `hide`
+- `opacity`: fade opacity from `0.03` to `0.60`
+- `depth`: maximum cutaway distance from the camera in millimetres
+- `hiddenWallIds`: walls manually hidden for camera views; all IDs must refer to valid walls
+
 ## Align furniture β behaviour
 
 The current beta follows conservative rules:
-
 1. Keep objects in their intended room when possible.
 2. Preserve grouped layouts, especially dining tables and matching chairs.
 3. Keep wall-anchored carpentry parallel and close to its wall.
@@ -149,21 +203,27 @@ The current beta follows conservative rules:
 
 When placement metadata is absent, the app infers relationships from object names, current room, proximity to walls and elevation.
 
-## Supported decorative models
+## Supported models
 
-- `glass-blocks` — glass-block screen
-- `plant` — potted plant
-- `tv` — television with stand
-- `picture-frame` — framed picture
-- `fruit-bowl` — bowl with fruit
-- `phone` — handphone
-- `flask` — water flask
+Decorative:
+- `glass-blocks`
+- `plant`
+- `tv`
+- `picture-frame`
+- `fruit-bowl`
+- `phone`
+- `flask`
 
-Objects without a recognised `model` render as editable boxes. Carpentry such as `TV console`, wardrobes and kitchen cabinets does not require a `model` value.
+Carpentry:
+- `l-wardrobe`
+
+Objects without a recognised `model` render as editable boxes.
 
 ## Current catalogue defaults
 
-- TV console: `1800 × 450 × 500 mm`, category `carpentry`
+- Full-height wardrobe: `2400 × 600 × 2700 mm`
+- L-shaped wardrobe: `2400 × 1800 × 2700 mm`, `armDepth: 600`, model `l-wardrobe`
+- TV console: `1800 × 450 × 500 mm`
 - TV: `1200 × 180 × 760 mm`, model `tv`
 - Framed picture: `800 × 70 × 1000 mm`, model `picture-frame`
 - Bowl of fruits: `360 × 360 × 190 mm`, model `fruit-bowl`
@@ -175,10 +235,12 @@ Objects without a recognised `model` render as editable boxes. Carpentry such as
 - IDs must be unique within the project.
 - Every opening's `wallId` must exist.
 - Every `placement.wallId` and `placement.supportId`, when supplied, must reference a valid object.
+- Every `settings.cameraCutaway.hiddenWallIds` entry must reference a valid wall.
 - Wall length must be at least 200 mm.
 - Dimensions must be positive.
 - Elevation must be zero or positive.
 - Ceiling height defaults to 2600 mm.
 - `category` is one of `furniture`, `carpentry`, or `decorative`.
 - `placement.mode`, when supplied, is one of `wall`, `free`, or `support`.
-- Use a supported `model` value when a recognised decorative object should render with its custom geometry.
+- `settings.cameraCutaway.style` is `fade` or `hide`.
+- Use a supported `model` value when custom geometry is required.
