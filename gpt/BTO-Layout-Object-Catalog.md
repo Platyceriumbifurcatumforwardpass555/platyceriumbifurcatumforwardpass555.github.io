@@ -16,11 +16,36 @@ Use these exact names, categories and `model` values when generating project JSO
 ## Carpentry
 
 - Full-height wardrobe — 2400 × 600 × 2700
+- L-shaped wardrobe — 2400 × 1800 × 2700, `model: "l-wardrobe"`, `armDepth: 600`
 - Kitchen lower cabinets — 2400 × 600 × 870
 - Kitchen upper cabinets — 2400 × 350 × 750
 - Kitchen worktop — 2400 × 650 × 920
 - Settee — 1600 × 550 × 480
 - TV console — 1800 × 450 × 500
+
+### Carpentry resize behaviour
+
+Straight carpentry is resized only along its longest plan dimension. The opposite end remains fixed.
+
+An L-shaped wardrobe uses:
+
+```json
+{
+  "name": "L-shaped wardrobe",
+  "category": "carpentry",
+  "model": "l-wardrobe",
+  "w": 2400,
+  "d": 1800,
+  "h": 2700,
+  "armDepth": 600
+}
+```
+
+- `w` is the outer length of the horizontal arm.
+- `d` is the outer length of the perpendicular arm.
+- `armDepth` is the wardrobe carcass depth shared by both arms.
+- Keep `armDepth` smaller than both `w` and `d`.
+- Layout Studio provides one resize handle at each free end of the L so either arm can be extended or shortened independently.
 
 ## Decorative
 
