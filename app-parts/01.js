@@ -3,6 +3,9 @@
       const MM = 0.001;
       const PLAN_W = 14775;
       const PLAN_H = 9500;
+      const APP_VERSION = '2.7';
+      const PROJECT_PACKAGE_FORMAT = 'bto-layout-package';
+      const PROJECT_LIBRARY_URL = 'projects/index.json';
       const TESSERACT_CDN = 'https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';
       const palette = {
         fixed: 0xc8c1b7, floor: 0xe7e2da, wall: 0x8b8983,
@@ -11,6 +14,8 @@
       };
 
       const initialScene = {
+        meta: {name:'Singapore 5-room BTO',brief:'Couple household. Open bedroom beside living room, open kitchen, king bed, queen bed, TV and dining for 6–8.',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),appVersion:APP_VERSION},
+        references: [],
         basemap: null,
         rooms: [
           {id:'room-master',name:'Master bedroom',type:'bedroom',x:0,y:0,w:3150,d:5010,color:0xe8e1d8},
@@ -79,7 +84,7 @@
           {id:'sofa', name:'Low sofa', x:10500, y:1400, w:950, d:2600, h:720, rotation:0, color:0xaaa7a3},
           {id:'coffee', name:'Coffee table', x:11850, y:2250, w:1100, d:650, h:340, rotation:0, shape:'rounded', color:0x8e8580},
           {id:'tv', name:'TV console', x:14275, y:1500, w:400, d:2400, h:450, rotation:0, color:0x77736f},
-          {id:'hosting', name:'Hosting console', x:10650, y:5000, w:1500,d:400,h:800,rotation:0,color:0x9e948b}
+          {id:'hosting', name:'Hosting console', x:10650, y:5000, w:1500, d:400, h:800, rotation:0, color:0x9e948b}
         ],
         settings: {ceilingVisible:false, ceilingHeight:2600},
         camera: null
