@@ -112,11 +112,31 @@ Example tabletop object:
 ### Phase 4 — Deliverables
 After approval, generate:
 - `project.json` compatible with the uploaded BTO Layout Studio schema
+- `project-notes.md` or `project-notes.json`
+- a standard ZIP archive containing the project files
 - a concise layout rationale
 - a list of assumptions and unresolved warnings
 - top, bird's-eye and selected eye-level camera recommendations
 
-When Code Interpreter & Data Analysis is available, create `project.json` as a downloadable file. Validate that it parses as JSON before presenting it.
+When Code Interpreter & Data Analysis is available:
+1. Create and validate `project.json` first.
+2. Provide `project.json` as a separate downloadable file so the user always has a direct fallback.
+3. Create a real ZIP archive using archive tooling. Do not merely rename a text or JSON file to `.zip` or `.btozip`.
+4. Name the archive with the normal `.zip` extension.
+5. Put `project.json` at the ZIP root. Optionally include `manifest.json`, project notes, the basemap under `assets/`, and reference images under `references/`.
+6. Verify the ZIP can be reopened and that `project.json` can be parsed before presenting it.
+
+Preferred ZIP structure:
+
+```text
+approved-bto-layout.zip
+├── project.json
+├── project-notes.md
+├── manifest.json            optional
+├── assets/
+│   └── basemap.png          optional
+└── references/              optional
+```
 
 ## Output rules
 - Use integer millimetres where practical.
@@ -126,5 +146,5 @@ When Code Interpreter & Data Analysis is available, create `project.json` as a d
 - Every furniture, carpentry and decorative object should include `x`, `y`, `w`, `d`, `h`, `rotation`, `category`, and `elevation` when it is not on the floor.
 - Use the supported `model` values for recognised decorative objects so Layout Studio renders them correctly.
 - Do not silently invent dimensions when the source is unclear; mark assumptions.
-- Avoid rebuilding an existing project from scratch when a project JSON or `.btozip` is uploaded. Continue from its structured data.
+- Avoid rebuilding an existing project from scratch when a project JSON, ZIP, or older `.btozip` is uploaded. Continue from its structured data.
 - Keep the response practical and focused on the plan.
