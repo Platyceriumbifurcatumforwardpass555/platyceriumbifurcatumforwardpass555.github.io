@@ -63,13 +63,52 @@ The project file is UTF-8 JSON. Coordinates and dimensions are millimetres. The 
   "elevation": 0,
   "rotation": 0,
   "shape": "rounded",
-  "color": 12102304
+  "color": 12102304,
+  "placement": {
+    "roomId": "room-dining",
+    "mode": "free",
+    "groupId": "dining-set"
+  }
 }
 ```
 
 `x` and `y` refer to the object's top-left unrotated bounding rectangle. Rotation is in degrees around the object centre.
 
 `elevation` is the height of the object's bottom above finished floor level. It defaults to `0`. For an object placed on top of another object, use the supporting object's `elevation + h` as the upper object's elevation.
+
+## Optional placement metadata
+
+The `placement` object lets Layout Studio preserve design intent when **Align furniture β** is used after walls have been corrected.
+
+```json
+{
+  "roomId": "room-living",
+  "mode": "wall",
+  "wallId": "wall-living-east",
+  "gap": 20,
+  "supportId": null,
+  "groupId": "living-tv-zone"
+}
+```
+
+Fields:
+
+- `roomId`: intended room-zone ID.
+- `mode`: `wall`, `free`, or `support`.
+- `wallId`: valid wall ID for wall-anchored objects.
+- `gap`: desired clear distance in millimetres from the wall face.
+- `supportId`: object ID beneath an elevated decorative object.
+- `groupId`: shared ID for objects whose relative arrangement should be preserved.
+
+Recommended use:
+
+- Wardrobes, kitchen cabinets, worktops and TV consoles: `mode: "wall"` with `wallId`.
+- Beds: `mode: "wall"` when the intended headboard wall is known.
+- Dining table and chairs: shared `groupId`, usually `dining-set`.
+- Freestanding sofa, lounge chair and coffee table: usually `mode: "free"`.
+- TV, fruit bowl, handphone and flask on another object: `mode: "support"` with `supportId`.
+
+Placement metadata is advisory. Collision, circulation and door-clearance checks take priority.
 
 Example tabletop object:
 
@@ -86,9 +125,29 @@ Example tabletop object:
   "h": 190,
   "elevation": 760,
   "rotation": 0,
-  "color": 12095597
+  "color": 12095597,
+  "placement": {
+    "roomId": "room-dining",
+    "mode": "support",
+    "supportId": "dining-table",
+    "groupId": "dining-set"
+  }
 }
 ```
+
+## Align furniture β behaviour
+
+The current beta follows conservative rules:
+
+1. Keep objects in their intended room when possible.
+2. Preserve grouped layouts, especially dining tables and matching chairs.
+3. Keep wall-anchored carpentry parallel and close to its wall.
+4. Move supported decorative objects with their supporting furniture.
+5. Avoid walls, fixed shell objects, door-clearance zones and declared circulation clearances.
+6. Do not move already valid freestanding furniture merely to make it look more regular.
+7. Apply all changes as one undoable action.
+
+When placement metadata is absent, the app infers relationships from object names, current room, proximity to walls and elevation.
 
 ## Supported decorative models
 
@@ -115,9 +174,11 @@ Objects without a recognised `model` render as editable boxes. Carpentry such as
 
 - IDs must be unique within the project.
 - Every opening's `wallId` must exist.
+- Every `placement.wallId` and `placement.supportId`, when supplied, must reference a valid object.
 - Wall length must be at least 200 mm.
 - Dimensions must be positive.
 - Elevation must be zero or positive.
 - Ceiling height defaults to 2600 mm.
 - `category` is one of `furniture`, `carpentry`, or `decorative`.
+- `placement.mode`, when supplied, is one of `wall`, `free`, or `support`.
 - Use a supported `model` value when a recognised decorative object should render with its custom geometry.
