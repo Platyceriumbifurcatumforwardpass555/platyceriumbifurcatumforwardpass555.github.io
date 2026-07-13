@@ -1,9 +1,18 @@
 # Custom GPT setup
 
-Upload these as GPT knowledge:
+## Instructions
+
+Paste the complete contents of `BTO-Layout-Planner-Instructions.md` into the GPT **Instructions** field. Do not upload it only as Knowledge, because it defines workflow and behaviour.
+
+## Knowledge files
+
+Upload:
 
 1. `../schema/project-schema.md`
 2. `../schema/project-template.json`
-3. Any company-specific HDB planning standards or furniture-clearance guide
+3. `BTO-Layout-Object-Catalog.md`
+4. Any company-specific HDB planning standards or furniture-clearance guide
 
-Paste the contents of `BTO-Layout-Planner-Instructions.md` into the GPT Instructions field rather than uploading it only as knowledge. Enable Code Interpreter & Data Analysis so the GPT can inspect project files and generate a downloadable JSON. Enable Web Search only when sourcing current products or regulations is required.
+Enable **Code Interpreter & Data Analysis** so the GPT can inspect `.btozip` or JSON projects, validate data and generate a downloadable `project.json`. Enable **Web Search** only when current product dimensions, HDB rules or sourcing information are required.
+
+After replacing instructions or knowledge files, test the GPT in Preview with one existing project package and one new floor plan before selecting **Update**.
