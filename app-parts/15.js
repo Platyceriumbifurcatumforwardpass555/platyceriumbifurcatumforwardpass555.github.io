@@ -1,7 +1,7 @@
       // Camera cutaway controls. Walls remain in the project model and collision checks;
       // only their viewport/export rendering is faded or hidden.
       const cameraCutawayRaycaster=new THREE.Raycaster(),cameraCutawayMaterialBase=new WeakMap(),cameraCutawayVisibleBase=new WeakMap();
-      let cameraCutawayScheduled=false,cameraCutawayWallIds=new Set();
+      let cameraCutawayScheduled=false,cameraCutawayWallIds=new Set(),cutawayOpacitySnapshot=null;
 
       function ensureCameraCutawaySettings(){
         project.settings=project.settings||{};
@@ -75,7 +75,7 @@
       function automaticBlockingWallIds(settings){
         const ids=new Set(),ceilingHeight=project.settings?.ceilingHeight||2600,cameraHeight=camera.position.y/MM;
         if(!settings.enabled||cameraHeight>ceilingHeight+1400)return ids;
-        const wallMeshes=shellGroup.children.filter(mesh=>mesh.userData?.wall&&mesh.visible!==false);
+        const wallMeshes=shellGroup.children.filter(mesh=>mesh.userData?.wall);
         if(!wallMeshes.length)return ids;
         camera.updateMatrixWorld();
         const origin=camera.position.clone(),centre=orbit.target.clone(),centreVector=centre.clone().sub(origin),centreDistance=centreVector.length();
@@ -96,13 +96,15 @@
       }
 
       function applyCameraCutaway(){
-        const settings=ensureCameraCutawaySettings(),manual=new Set(settings.hiddenWallIds),automatic=automaticBlockingWallIds(settings),affected=new Set([...manual,...automatic]);cameraCutawayWallIds=affected;
-        shellGroup.children.filter(mesh=>mesh.userData?.wall).forEach(mesh=>{
-          restoreCutawayMesh(mesh);const wallId=mesh.userData.id;if(!affected.has(wallId))return;
+        const settings=ensureCameraCutawaySettings(),manual=new Set(settings.hiddenWallIds),wallMeshes=shellGroup.children.filter(mesh=>mesh.userData?.wall);
+        wallMeshes.forEach(restoreCutawayMesh);openingGroup.children.forEach(restoreCutawayMesh);
+        const automatic=automaticBlockingWallIds(settings),affected=new Set([...manual,...automatic]);cameraCutawayWallIds=affected;
+        wallMeshes.forEach(mesh=>{
+          const wallId=mesh.userData.id;if(!affected.has(wallId))return;
           if(manual.has(wallId)||settings.style==='hide')mesh.visible=false;else fadeCutawayMesh(mesh,settings.opacity);
         });
         openingGroup.children.forEach(mesh=>{
-          restoreCutawayMesh(mesh);const wallId=mesh.userData?.wallId;if(!wallId||!affected.has(wallId))return;
+          const wallId=mesh.userData?.wallId;if(!wallId||!affected.has(wallId))return;
           if(manual.has(wallId)||settings.style==='hide')mesh.visible=false;else fadeCutawayMesh(mesh,Math.min(settings.opacity,.22));
         });
         architectureLabelGroup.children.forEach(label=>{const ids=label.userData?.ignoreIds||[];label.visible=!ids.some(id=>affected.has(id));});
@@ -122,10 +124,19 @@
         pushHistory(label);const settings=ensureCameraCutawaySettings();mutator(settings);applyCameraCutaway();
       }
 
+      function armCutawayOpacityHistory(){if(!cutawayOpacitySnapshot)cutawayOpacitySnapshot=JSON.stringify(project);}
+      function commitCutawayOpacityHistory(){
+        if(!cutawayOpacitySnapshot)return;const changed=cutawayOpacitySnapshot!==JSON.stringify(project);
+        if(changed){undoStack.push(cutawayOpacitySnapshot);if(undoStack.length>60)undoStack.shift();redoStack.length=0;$('undo').disabled=false;$('redo').disabled=true;$('undo').title='Undo change cutaway opacity';}
+        cutawayOpacitySnapshot=null;
+      }
+
       if($('autoCutaway'))$('autoCutaway').onchange=()=>updateCutawaySetting('toggle camera cutaway',settings=>settings.enabled=$('autoCutaway').checked);
       if($('cutawayStyle'))$('cutawayStyle').onchange=()=>updateCutawaySetting('change cutaway style',settings=>settings.style=$('cutawayStyle').value);
-      if($('cutawayOpacity'))$('cutawayOpacity').oninput=()=>{const settings=ensureCameraCutawaySettings();settings.opacity=Math.max(.03,Math.min(.6,+$('cutawayOpacity').value/100));applyCameraCutaway();};
-      if($('cutawayOpacity'))$('cutawayOpacity').onchange=()=>pushHistory('change cutaway opacity');
+      if($('cutawayOpacity')){
+        $('cutawayOpacity').oninput=()=>{armCutawayOpacityHistory();const settings=ensureCameraCutawaySettings();settings.opacity=Math.max(.03,Math.min(.6,+$('cutawayOpacity').value/100));applyCameraCutaway();};
+        $('cutawayOpacity').onchange=commitCutawayOpacityHistory;$('cutawayOpacity').onblur=commitCutawayOpacityHistory;
+      }
       if($('cutawayDepth'))$('cutawayDepth').onchange=()=>updateCutawaySetting('change cutaway depth',settings=>settings.depth=Math.max(100,Math.min(6000,+$('cutawayDepth').value||1200)));
       if($('hideSelectedCameraWall'))$('hideSelectedCameraWall').onclick=()=>{
         const wallId=selectedCameraWallId();if(!wallId)return;updateCutawaySetting('hide wall for camera',settings=>{if(!settings.hiddenWallIds.includes(wallId))settings.hiddenWallIds.push(wallId);});
