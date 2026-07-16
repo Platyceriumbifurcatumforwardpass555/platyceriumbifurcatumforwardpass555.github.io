@@ -42,9 +42,9 @@ jobs:
                   continue
               out = src
               if meta_a:
-                  out = out.replace('<!-- eaf305e1cfcbee32ed9057973766748b71b85735bed0c915 -->', meta_a)
+                  out = out.replace('<!-- e669de61077dc31e93e04432ff -->', meta_a)
               if meta_b:
-                  out = out.replace('<!--  -->', meta_b)
+                  out = out.replace('<!-- 546e8c7819e890a97a8dd6084748a005940271c6 -->', meta_b)
               if out != src:
                   page.write_text(out, encoding='utf-8')
                   changed += 1
